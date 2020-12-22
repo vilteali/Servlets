@@ -1,6 +1,8 @@
 package com.ar.ali.controller;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;
@@ -10,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
+
+import java.util.Date;
 import java.util.List;
 
 import com.ar.ali.model.ModeloProductos;
@@ -28,7 +32,6 @@ public class ProductoController extends HttpServlet {
 	// Inicializamos nuestro Servlet con el método init
 	@Override
 	public void init() throws ServletException {
-		// TODO Auto-generated method stub
 		super.init();
 		
 		// Instanciamos nuestro modelo pasando como parametro DataSource
@@ -42,7 +45,59 @@ public class ProductoController extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		// Leemos el parámetro del formulario > hidden
+		String parameter = request.getParameter("instruccion");
+		
+		// Si no se envía el parámetro, listamos los productos solamente
+		if(parameter==null)
+			parameter="listar";
+		
+		// Redirigimos el flujo de ejecución al método indicado
+		switch(parameter) {
+			case "listar":
+				obtenerProducto(request, response);
+				break;
+			case "insertForm":
+				agregarProducto(request, response);
+				break;
+			default:
+				obtenerProducto(request, response);
+		}
+		
+	}
+
+	private void agregarProducto(HttpServletRequest request, HttpServletResponse response) {
+		// Leemos la información del producto ingresado
+		String codArt = request.getParameter("codigoArticulo");
+		String seccion = request.getParameter("seccion");
+		String nameArt = request.getParameter("nombreArticulo");
+		double precio = Double.parseDouble(request.getParameter("precio"));
+		
+		// Convertimos la fecha String en formato Date
+		SimpleDateFormat formatFecha = new SimpleDateFormat("yyyy-MM-dd");
+		Date fecha = null;
+		
+		try {
+			fecha = formatFecha.parse(request.getParameter("fecha"));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String importado = request.getParameter("importado");
+		String paisDeOrigen = request.getParameter("paisDeOrigen");
+		
+		// Creamos un objeto de tipo Producto
+		Productos nuevoProducto = new Productos(codArt, seccion, nameArt, precio, fecha, importado, paisDeOrigen);
+		
+		// Enviar el objeto al modelo y insertamos el objeto en la base de datos
+		modelo.addProducto(nuevoProducto);
+		
+		// Volvemos a listar los productos
+		obtenerProducto(request, response);
+		
+	}
+
+	private void obtenerProducto(HttpServletRequest request, HttpServletResponse response) {
 		// Obtener la lista de productos desde el modelo
 		List<Productos> productos;
 		
@@ -60,6 +115,7 @@ public class ProductoController extends HttpServlet {
 			
 			e.printStackTrace();
 		}
+		
 	}
 
 }

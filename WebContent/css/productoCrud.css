@@ -1,0 +1,22 @@
+.cabecera {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #ffbf53;
+    text-align: center;
+}
+
+.filas {
+	text-align: center;
+	background-color: #ffcb99;
+	color: #ffffff;
+	border: 1px solid;
+}
+
+/* table { */
+/* 	float:left; */
+/* } */
+
+#boton {
+	margin-top:10px;
+}
