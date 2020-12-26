@@ -45,6 +45,7 @@ public class ProductoController extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		// Leemos el parámetro del formulario > hidden
 		String parameter = request.getParameter("instruccion");
 		
@@ -60,13 +61,80 @@ public class ProductoController extends HttpServlet {
 			case "insertForm":
 				agregarProducto(request, response);
 				break;
+			case "updateRegister":
+				try {
+					actualizarProducto(request, response);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
+			case "ActualizarForm":
+				try {
+					actualizaElProducto(request, response);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
 			default:
 				obtenerProducto(request, response);
 		}
 		
 	}
 
+	private void actualizaElProducto(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		// Leemos los datos que vienen del formulario actualizar
+		String codArt = request.getParameter("codigoArticulo");
+		String seccion = request.getParameter("seccion");
+		String nameArt = request.getParameter("nombreArticulo");
+		double precio = Double.parseDouble(request.getParameter("precio"));
+		
+		// Convertimos la fecha String en formato Date
+		SimpleDateFormat formatFecha = new SimpleDateFormat("yyyy-MM-dd");
+		Date fecha = null;
+		
+		try {
+			fecha = formatFecha.parse(request.getParameter("fecha"));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String importado = request.getParameter("importado");
+		String paisDeOrigen = request.getParameter("paisDeOrigen");
+		
+		// Creamos un objeto del tipo Producto con los datos del formulario
+		Productos productoActualizado = new Productos(codArt, seccion, nameArt, precio, fecha, importado, paisDeOrigen);
+		
+		// Actualizamos la BBDD con los datos del objeto Producto
+		modelo.actualizarProducto(productoActualizado);
+		
+		// Retornamos la lista con la información actualizada
+		obtenerProducto(request, response);
+		
+	}
+
+	private void actualizarProducto(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		// Leemos el codígo artículo que viene del listado
+		String codigoArt = request.getParameter("codigoArticulo");
+		
+		// Enviamos el código artículo al modelo
+		Productos producto = modelo.getProducto(codigoArt);
+		
+		// Colocamos el atributo correspondiente para el codígo artículo
+		request.setAttribute("actualizarProducto", producto);
+		
+		// Enviamos el producto al formulario de actualizar
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/actualizarProducto.jsp");
+		dispatcher.forward(request, response);
+		
+		
+	}
+
 	private void agregarProducto(HttpServletRequest request, HttpServletResponse response) {
+		
 		// Leemos la información del producto ingresado
 		String codArt = request.getParameter("codigoArticulo");
 		String seccion = request.getParameter("seccion");
@@ -98,6 +166,7 @@ public class ProductoController extends HttpServlet {
 	}
 
 	private void obtenerProducto(HttpServletRequest request, HttpServletResponse response) {
+		
 		// Obtener la lista de productos desde el modelo
 		List<Productos> productos;
 		

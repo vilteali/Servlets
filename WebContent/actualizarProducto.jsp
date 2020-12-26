@@ -7,47 +7,44 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<link rel="stylesheet" href="css/formularioForm.css">
+	<link rel="stylesheet" href="css/actualizarProducto.css">
 	
-	<h4>Insertar Registros</h4>
+	<h4>Actualizar Producto</h4>
 	<br>
 	<form name="miFormulario"  method="get" action="ProductoController">
-	<input type="hidden" name="instruccion" value="insertForm">
+	<input type="hidden" name="instruccion" value="ActualizarForm">
+	<input type="hidden" name="codigoArticulo" value="${actualizarProducto.codigoArticulo}">
+	
 		<table>
-			<tr>
-				<td>Codigo articulo</td>
-				<td><label for=codigoArticulo></label> 
-				<input type="text" name=codigoArticulo id=codigoArticulo></td>
-			</tr>
 			<tr>
 				<td>Secci&oacute;n</td>
 				<td><label for=seccion></label> 
-				<input type="text" name=seccion id=seccion></td>
+				<input type="text" name=seccion id=seccion value="${actualizarProducto.seccion}"></td>
 			</tr>
 			<tr>
 				<td>Nombre Art&iacute;culo</td>
 				<td><label for=nombreArticulo></label> 
-				<input type="text" name=nombreArticulo id=nombreArticulo></td>
+				<input type="text" name=nombreArticulo id=nombreArticulo value="${actualizarProducto.nombreArticulo}"></td>
 			</tr>
 			<tr>
 				<td>Precio</td>
 				<td><label for=precio></label> 
-				<input type="text" name=precio id=precio></td>
+				<input type="text" name=precio id=precio value="${actualizarProducto.precio}"></td>
 			</tr>
 			<tr>
 				<td>Fecha</td>
 				<td><label for=fecha></label> 
-				<input type="text" name=fecha id=fecha></td>
+				<input type="text" name=fecha id=fecha value="${actualizarProducto.fecha}"></td>
 			</tr>
 			<tr>
 				<td>Importado</td>
 				<td><label for=importado></label> 
-				<input type="text" name=importado id=importado></td>
+				<input type="text" name=importado id=importado value="${actualizarProducto.importado}"></td>
 			</tr>
 			<tr>
 				<td>Pa&iacute;s de origen</td>
 				<td><label for=paisDeOrigen></label> 
-				<input type="text" name=paisDeOrigen id=paisDeOrigen></td>
+				<input type="text" name=paisDeOrigen id=paisDeOrigen value="${actualizarProducto.paisDeOrigen}"></td>
 			</tr>							
 			<tr>
 				<td><input type="submit" name="envio" id="envio" value="Enviar"></td>

@@ -7,6 +7,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.naming.PartialResultException;
 import javax.sql.DataSource;
 import com.ar.ali.productos.Productos;
 
@@ -16,7 +18,6 @@ public class ModeloProductos {
 	
 	// Por parametro pasamos el Pool de conexiones
 	public ModeloProductos(DataSource origenDatos) {
-		
 		this.origenDatos = origenDatos;
 	}
 	
@@ -75,7 +76,6 @@ public class ModeloProductos {
 				+ "(id_articulo,seccion,nombre_articulo,precio,fecha,importado,pais_de_origen)"
 				+ "VALUES (?,?,?,?,?,?,?)";
 		
-		
 		// Establecemos los parametros para el nuevo producto
 		statement = connection.prepareStatement(insert);
 		statement.setString(1, nuevoProducto.getCodigoArticulo());
@@ -96,6 +96,62 @@ public class ModeloProductos {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		
+	}
+
+	public Productos getProducto(String codigoArt) {
+		
+		Productos producto = null;
+		Connection connection = null;
+		PreparedStatement miStatement = null;
+		ResultSet miResultSet = null;
+		String cArt = codigoArt;
+		
+		try {
+		// Establecemos conexión con la BBDD
+		connection = origenDatos.getConnection();
+		
+		// Creamos la query SQL para buscar el producto del parametro enviado
+		String sqlQuery = "SELECT * FROM producto WHERE id_articulo = ?";
+		
+		// Creamos la consulta preparada
+		miStatement = connection.prepareStatement(sqlQuery);
+		
+		// Establecemos los parámetros 
+		miStatement.setString(1, cArt);
+		
+		// Ejecutamos la consulta
+		miResultSet = miStatement.executeQuery();
+		
+		// Obtenemos los datos 
+		if(miResultSet.next()) {
+			
+			// OBTENEMOS LOS VALORES DE LAS COLUMNAS
+			String codigoArticulo = miResultSet.getString("id_articulo");
+			String seccion = miResultSet.getString("seccion");
+			String nombreArt = miResultSet.getString("nombre_articulo");
+			Double precio = miResultSet.getDouble("precio");
+			Date fecha = miResultSet.getDate("fecha");
+			String importado = miResultSet.getString("importado");
+			String paisOrigen = miResultSet.getString("pais_de_origen");
+			
+			// Llamamos al constructor sin codigoArticulo / id_articulo
+			producto = new Productos(seccion, nombreArt, precio, fecha, importado, paisOrigen);
+			
+			} else {
+				throw new Exception("No se encontro el producto con código: "+cArt);
+			}
+
+		}catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+
+	public void actualizarProducto(Productos productoActualizado) {
+
 		
 	}
 	
