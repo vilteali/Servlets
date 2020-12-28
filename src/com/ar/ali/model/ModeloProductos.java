@@ -136,7 +136,7 @@ public class ModeloProductos {
 			String paisOrigen = miResultSet.getString("pais_de_origen");
 			
 			// Llamamos al constructor sin codigoArticulo / id_articulo
-			producto = new Productos(seccion, nombreArt, precio, fecha, importado, paisOrigen);
+			producto = new Productos(codigoArticulo, seccion, nombreArt, precio, fecha, importado, paisOrigen);
 			
 			} else {
 				throw new Exception("No se encontro el producto con código: "+cArt);
@@ -150,8 +150,34 @@ public class ModeloProductos {
 		return null;
 	}
 
-	public void actualizarProducto(Productos productoActualizado) {
-
+	public void actualizarProducto(Productos productoActualizado) throws Exception {
+		
+		Connection miConexion = null;
+		PreparedStatement miStatement = null;
+		final String sql = "UPDATE producto SET seccion=?, nombre_articulo=?, precio=?, fecha=?, "
+				+ "importado=?, pais_de_origen=? WHERE id_articulo=?";
+		
+		// Establecemos conexión
+		miConexion = origenDatos.getConnection();
+		
+		// Creamos la consulta preparada 
+		miStatement = miConexion.prepareStatement(sql);
+		
+		// Establecemos los parámetros
+		miStatement.setString(1, productoActualizado.getSeccion());
+		miStatement.setString(2, productoActualizado.getNombreArticulo());
+		miStatement.setDouble(3, productoActualizado.getPrecio());
+		
+		// Casteamos el objeto sql.Date > util.Date
+		java.util.Date utilDate = productoActualizado.getFecha();
+		java.sql.Date convertDate = new java.sql.Date(utilDate.getTime());
+		miStatement.setDate(4, convertDate);
+		miStatement.setString(5, productoActualizado.getImportado());
+		miStatement.setString(6, productoActualizado.getPaisDeOrigen());
+		miStatement.setString(7, productoActualizado.getCodigoArticulo());
+		
+		// Ejecutamos la sentencia SQL
+		miStatement.executeUpdate();
 		
 	}
 	
