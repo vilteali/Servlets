@@ -180,5 +180,19 @@ public class ModeloProductos {
 		miStatement.executeUpdate();
 		
 	}
+
+	public void eliminarProducto(String codArt) throws Exception {
+		
+		Connection miConexion = null;
+		PreparedStatement miStatement = null;
+		final String sql = "DELETE from producto WHERE id_articulo=?";
+		
+		miConexion = origenDatos.getConnection();
+		miStatement = miConexion.prepareStatement(sql);
+		
+		miStatement.setString(1, codArt);
+		miStatement.execute();
+		
+	}
 	
 }

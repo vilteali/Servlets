@@ -25,11 +25,16 @@
 		</tr>
 		<c:forEach var="e" items="${LISTAPRODUCTOS}">
 	
+		<!-- LINK PARA ACTUALIZAR CADA PRODUCTO -->
 		<c:url var="linkTemp" value="ProductoController">
 			<c:param name="instruccion" value="updateRegister"></c:param>
 			<c:param name="codigoArticulo" value="${e.codigoArticulo}"></c:param>
 		</c:url>		
-		
+		<!-- LINK PARA BORRAR CADA PRODUCTO -->
+		<c:url var="linkDelete" value="ProductoController">
+			<c:param name="instruccion" value="deleteRegister"></c:param>	
+			<c:param name="codigoArticulo" value="${e.codigoArticulo}"></c:param>
+		</c:url>
 		<tr>
 			<td class="filas">${e.codigoArticulo}</td>
 			<td class="filas">${e.seccion}</td>
@@ -38,7 +43,8 @@
 			<td class="filas">${e.fecha}</td>
 			<td class="filas">${e.importado}</td>
 			<td class="filas">${e.paisDeOrigen}</td>
-			<td class="filas"><a href="${linkTemp}">Actualizar</a></td>
+			<td class="filas"><a href="${linkTemp}">Actualizar</a>
+			&nbsp;<a href="${linkDelete}">Eliminar</a></td>
 		</tr>
 		</c:forEach>
 	</table>

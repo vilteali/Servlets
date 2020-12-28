@@ -11,7 +11,10 @@
 	background-color: #ffcb99;
 	color: #ffffff;
 	border: 1px solid;
+	padding: 5px;
+	margin:10px;
 }
+
 
 /* table { */
 /* 	float:left; */

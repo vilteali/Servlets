@@ -77,10 +77,29 @@ public class ProductoController extends HttpServlet {
 					e.printStackTrace();
 				}
 				break;
+			case "deleteRegister":
+				try {
+					eliminarProducto(request, response);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
 			default:
 				obtenerProducto(request, response);
 		}
 		
+	}
+
+	private void eliminarProducto(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		// Capturamos el ID del articulo
+		String codArt = request.getParameter("codigoArticulo");
+		
+		// Borramos el producto de la base de datos
+		modelo.eliminarProducto(codArt);
+		
+		// Volvemos a listar los productos 
+			obtenerProducto(request, response);
 	}
 
 	private void actualizaElProducto(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -129,7 +148,6 @@ public class ProductoController extends HttpServlet {
 		// Enviamos el producto al formulario de actualizar
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/actualizarProducto.jsp");
 		dispatcher.forward(request, response);
-		
 		
 	}
 
