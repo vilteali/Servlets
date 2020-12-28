@@ -63,19 +63,20 @@ public class ModeloProductos {
 		return productos;
 	}
 
-	public void addProducto(Productos nuevoProducto) {
+	public void addProducto(Productos nuevoProducto) throws Exception {
 		
 		// Obtener la conexión
 		Connection connection = null;
 		PreparedStatement statement = null;
 		
-		try {
-			connection = origenDatos.getConnection();
 		// Creamos instrucción SQL para ingresar el producto (Statement)
 		String insert = "INSERT INTO producto "
 				+ "(id_articulo,seccion,nombre_articulo,precio,fecha,importado,pais_de_origen)"
 				+ "VALUES (?,?,?,?,?,?,?)";
 		
+		try {
+			connection = origenDatos.getConnection();
+	
 		// Establecemos los parametros para el nuevo producto
 		statement = connection.prepareStatement(insert);
 		statement.setString(1, nuevoProducto.getCodigoArticulo());
@@ -95,11 +96,15 @@ public class ModeloProductos {
 		
 		} catch(Exception e) {
 			e.printStackTrace();
+			
+		} finally {
+			statement.close();
+			connection.close();
 		}
 		
 	}
 
-	public Productos getProducto(String codigoArt) {
+	public Productos getProducto(String codigoArt) throws Exception {
 		
 		Productos producto = null;
 		Connection connection = null;
@@ -143,8 +148,11 @@ public class ModeloProductos {
 			}
 
 		}catch (Exception e) {
-			
 			e.printStackTrace();
+			
+		} finally {
+			miStatement.close();
+			connection.close();
 		}
 		
 		return null;
@@ -158,6 +166,8 @@ public class ModeloProductos {
 				+ "importado=?, pais_de_origen=? WHERE id_articulo=?";
 		
 		// Establecemos conexión
+		try {
+			
 		miConexion = origenDatos.getConnection();
 		
 		// Creamos la consulta preparada 
@@ -179,6 +189,11 @@ public class ModeloProductos {
 		// Ejecutamos la sentencia SQL
 		miStatement.executeUpdate();
 		
+		} finally {
+			miStatement.close();
+			miConexion.close();
+		}
+		
 	}
 
 	public void eliminarProducto(String codArt) throws Exception {
@@ -187,12 +202,18 @@ public class ModeloProductos {
 		PreparedStatement miStatement = null;
 		final String sql = "DELETE from producto WHERE id_articulo=?";
 		
+		try {
+			
 		miConexion = origenDatos.getConnection();
 		miStatement = miConexion.prepareStatement(sql);
 		
 		miStatement.setString(1, codArt);
 		miStatement.execute();
 		
+		} finally {
+			miStatement.close();
+			miConexion.close();
+		}
 	}
 	
 }

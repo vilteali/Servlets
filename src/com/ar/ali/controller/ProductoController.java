@@ -176,7 +176,12 @@ public class ProductoController extends HttpServlet {
 		Productos nuevoProducto = new Productos(codArt, seccion, nameArt, precio, fecha, importado, paisDeOrigen);
 		
 		// Enviar el objeto al modelo y insertamos el objeto en la base de datos
-		modelo.addProducto(nuevoProducto);
+		try {
+			modelo.addProducto(nuevoProducto);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		// Volvemos a listar los productos
 		obtenerProducto(request, response);
